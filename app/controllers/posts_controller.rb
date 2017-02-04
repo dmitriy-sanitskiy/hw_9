@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-  before_action :set_post, only: [:show, :edit, :update, :destroy]
+  before_action :set_post, :logged_in_user, only: [:create, :destroy]
   attr_accessor :title, :body
 
   # GET /posts
@@ -10,29 +10,31 @@ class PostsController < ApplicationController
 
   # GET /posts/1
   # GET /posts/1.json
-  def show
-  end
+  # def show
+  #   @posts = @user.posts.paginate(page: params[:page])
+  #   @user = User.find(params[:id])
+  # end
 
   # GET /posts/new
-  def new
-    @post = Post.new
-  end
+  # def new
+  #   @post = Post.new
+  # end
 
   # GET /posts/1/edit
-  def edit
-  end
+  # def edit
+  # end
 
   # POST /posts
   # POST /posts.json
   def create
-    @post = Post.new(post_params)
-
+    # @post = current_user.posts.build(post_params)
+    set_post
     respond_to do |format|
       if @post.save
-        format.html { redirect_to @post, notice: 'Post was successfully created.' }
-        format.json { render :show, status: :created, location: @post }
+        format.html { redirect_to root_url, notice: 'Post was successfully created.' }
+        format.json { render :show, status: :created, location: root_url }
       else
-        format.html { render :new }
+        format.html { redirect_to root_url }
         format.json { render json: @post.errors, status: :unprocessable_entity }
       end
     end
@@ -65,7 +67,7 @@ class PostsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_post
-      @post = Post.find(params[:id])
+      @post = current_user.posts.build(post_params)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

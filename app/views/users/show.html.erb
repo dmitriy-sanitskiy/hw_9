@@ -1,19 +1,26 @@
 <p id="notice"><%= notice %></p>
-
-<p>
+<span>
   <strong>Name:</strong>
-  <%= @user.name %>
-</p>
-
-<p>
+  <%= @user.name %> |
+</span>
+<span>
   <strong>Email:</strong>
-  <%= @user.email %>
-</p>
-
-<p>
+  <%= @user.email %> |
+</span>
+<span>
   <strong>Age:</strong>
-  <%= @user.age %>
-</p>
+  <%= @user.age %> |
+</span>
+<% if current_user?(@user) %>
+    <%= link_to "delete profile", @user, method: :delete,
+    data: { confirm: "You sure?" } %> |
+    <%= link_to 'Edit profile', edit_user_path(@user) %> |
+    <%= link_to 'Users list', users_path %><br><br><br>
+<% end %>
+<div class="">
 
-<%= link_to 'Edit', edit_user_path(@user) %> |
-<%= link_to 'Back', users_path %>
+</div>
+<div class="posts">
+  <%= render @posts %>
+</div>
+
