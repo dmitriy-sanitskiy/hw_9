@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
   before_action :set_post, :logged_in_user, only: [:create, :destroy]
-  before_action :correct_user,   only: :destroy
+  before_action :correct_user, only: :destroy
   attr_accessor :title, :body
 
   # GET /posts
@@ -11,10 +11,8 @@ class PostsController < ApplicationController
 
   # GET /posts/1
   # GET /posts/1.json
-  # def show
-  #   @posts = @user.posts.paginate(page: params[:page])
-  #   @user = User.find(params[:id])
-  # end
+  def show
+  end
 
   # GET /posts/new
   def new
@@ -22,8 +20,8 @@ class PostsController < ApplicationController
   end
 
   # GET /posts/1/edit
-  # def edit
-  # end
+  def edit
+  end
 
   # POST /posts
   # POST /posts.json
@@ -57,36 +55,32 @@ class PostsController < ApplicationController
 
   # DELETE /posts/1
   # DELETE /posts/1.json
+
   def destroy
-    # @post = current_user.posts.find_by(id: params[:id])
-    # @post = current_user.posts.find_by(user_id: params[:user_id])
     if @post.user.eql?(current_user)
-    @post.destroy
-    flash[:success] = "post deleted"
-    redirect_to request.referrer || root_url
+      @post.destroy
+      respond_to do |format|
+        format.html { redirect_to user_posts_path, notice: 'Post was successfully destroyed.' }
+        format.json { head :no_content }
+      end
+    end
   end
-  # def destroy
-  #   # @post = current_user.post.find_by(id: params[:id])
-  #   @post.destroy
-  #   respond_to do |format|
-  #     format.html { redirect_to user_posts_path, notice: 'Post was successfully destroyed.' }
-  #     format.json { head :no_content }
-  #   end
-  # end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_post
-      @post = current_user.posts.build(post_params)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_post
+    @post = current_user.posts.build(post_params)
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def post_params
-      params.require(:post).permit(:title, :body, :user_id)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def post_params
+    params.require(:post).permit(:title, :body, :user_id)
+  end
 
   def correct_user
     @post = current_user.posts.find_by(id: params[:id])
     redirect_to root_url if @post.nil?
   end
 end
+
+
