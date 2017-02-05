@@ -1,14 +1,11 @@
-
-
-<h2><%= post.title%></h2>
-
-<table class="table table-bordered">
-  <thead>
-  <tr>
-    <th><%= post.body %></th>
-    <th><%= post.created_at %></th>
-  </tr>
-  </thead>
-
-
-</table>
+<h1><%= post.title %></h1>
+<div class="jumbotron">
+  <p><%= post.body %></p>
+  <small> published <%= time_ago_in_words(post.updated_at) %> ago</small>
+  <br>
+  <% if current_user?(post.user) %>
+      <div class="btn btn-danger ">
+        <%= link_to "delete", post, method: :delete, data: {confirm: "You sure?"} %>
+      </div>
+  <% end %>
+</div>

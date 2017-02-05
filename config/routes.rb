@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   root to: 'posts#index'
   resources :users do
-    resources :posts, only: [:create, :destroy]
+    resources :posts
   end
 
   resources :sessions, only: [:new, :create, :destroy]

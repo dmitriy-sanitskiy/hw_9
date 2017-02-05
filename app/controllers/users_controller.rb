@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :set_user, :logged_in_user, only: [:edit, :update]
-  before_action :correct_user,   only: [:edit, :update]
+  before_action :set_user, :logged_in_user, only: [:edit, :update, :destroy]
+  before_action :correct_user,   only: [:edit, :update,:destroy]
   attr_accessor :name, :email, :age
 
   # GET /users
@@ -13,7 +13,7 @@ class UsersController < ApplicationController
   # GET /users/1.json
   def show
     @user = User.find(params[:id])
-    @posts = @user.posts#.paginate(page: params[:page])
+    @posts = @user.posts.paginate(page: params[:page])
   end
 
   # GET /users/new
@@ -34,7 +34,6 @@ class UsersController < ApplicationController
       if @user.save
         log_in @user
         session[:user_id] = @user.id
-        # session[:user_id] = @user.id
         format.html { redirect_to @user}#, flash.now[:success] = "Welcome!" }
         format.json { render :show, status: :created, location: @user }
       else

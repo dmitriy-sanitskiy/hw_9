@@ -1,26 +1,41 @@
 <p id="notice"><%= notice %></p>
-<span>
-  <strong>Name:</strong>
-  <%= @user.name %> |
-</span>
-<span>
-  <strong>Email:</strong>
-  <%= @user.email %> |
-</span>
-<span>
-  <strong>Age:</strong>
-  <%= @user.age %> |
-</span>
-<% if current_user?(@user) %>
-    <%= link_to "delete profile", @user, method: :delete,
-    data: { confirm: "You sure?" } %> |
-    <%= link_to 'Edit profile', edit_user_path(@user) %> |
-    <%= link_to 'Users list', users_path %><br><br><br>
+<div>
+  <span>
+    <strong>Name:</strong>
+    <%= @user.name %> |
+  </span>
+  <span>
+    <strong>Email:</strong>
+    <%= @user.email %> |
+  </span>
+  <span>
+    <strong>Age:</strong>
+    <%= @user.age %> |
+  </span>
+  <% if current_user?(@user) %>
+      <%= link_to "delete profile", @user, method: :delete,
+                  data: {confirm: "You sure?"} %> |
+      <%= link_to 'Edit profile', edit_user_path(@user) %> |
+      <br><br><br>
+      <%= link_to 'New post', new_user_post_path(current_user) %><br><br><br>
+
+  <% end %>
+</div>
+<% if logged_in? %>
+    <div class="row">
+      <aside class="col-md-4">
+        <section class="post_form">
+        </section>
+      </aside>
+    </div>
 <% end %>
-<div class="">
-
+<div class="col-md-12">
+  <% if @user.posts.any? %>
+      <h3>Microposts (<%= @user.posts.count %>)</h3>
+      <%= will_paginate @posts %>
+      <ol class="posts">
+        <%= render @posts %>
+      </ol>
+      <%= will_paginate @posts %>
+  <% end %>
 </div>
-<div class="posts">
-  <%= render @posts %>
-</div>
-

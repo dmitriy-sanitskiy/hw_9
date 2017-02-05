@@ -1,11 +1,12 @@
 class PostsController < ApplicationController
   before_action :set_post, :logged_in_user, only: [:create, :destroy]
+  before_action :correct_user,   only: :destroy
   attr_accessor :title, :body
 
   # GET /posts
   # GET /posts.json
   def index
-    @posts = Post.all
+    @posts = Post.paginate(page: params[:page])
   end
 
   # GET /posts/1
@@ -16,9 +17,9 @@ class PostsController < ApplicationController
   # end
 
   # GET /posts/new
-  # def new
-  #   @post = Post.new
-  # end
+  def new
+    @post = Post.new
+  end
 
   # GET /posts/1/edit
   # def edit
@@ -27,7 +28,7 @@ class PostsController < ApplicationController
   # POST /posts
   # POST /posts.json
   def create
-    # @post = current_user.posts.build(post_params)
+    @post = current_user.posts.build(post_params)
     set_post
     respond_to do |format|
       if @post.save
@@ -57,12 +58,21 @@ class PostsController < ApplicationController
   # DELETE /posts/1
   # DELETE /posts/1.json
   def destroy
+    # @post = current_user.posts.find_by(id: params[:id])
+    # @post = current_user.posts.find_by(user_id: params[:user_id])
+    if @post.user.eql?(current_user)
     @post.destroy
-    respond_to do |format|
-      format.html { redirect_to posts_url, notice: 'Post was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    flash[:success] = "post deleted"
+    redirect_to request.referrer || root_url
   end
+  # def destroy
+  #   # @post = current_user.post.find_by(id: params[:id])
+  #   @post.destroy
+  #   respond_to do |format|
+  #     format.html { redirect_to user_posts_path, notice: 'Post was successfully destroyed.' }
+  #     format.json { head :no_content }
+  #   end
+  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -74,4 +84,9 @@ class PostsController < ApplicationController
     def post_params
       params.require(:post).permit(:title, :body, :user_id)
     end
+
+  def correct_user
+    @post = current_user.posts.find_by(id: params[:id])
+    redirect_to root_url if @post.nil?
+  end
 end
