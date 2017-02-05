@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, :logged_in_user, only: [:edit, :update, :destroy]
-  before_action :correct_user,   only: [:edit, :update,:destroy]
+  before_action :correct_user, only: [:edit, :update, :destroy]
   attr_accessor :name, :email, :age
 
   # GET /users
@@ -34,10 +34,10 @@ class UsersController < ApplicationController
       if @user.save
         log_in @user
         session[:user_id] = @user.id
-        format.html { redirect_to @user}#, flash.now[:success] = "Welcome!" }
+        format.html { redirect_to @user } #, flash.now[:success] = "Welcome!" }
         format.json { render :show, status: :created, location: @user }
       else
-        format.html { redirect_to '/signup'}#, flash[:danger]}
+        format.html { redirect_to '/signup' } #, flash[:danger]}
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
@@ -66,28 +66,28 @@ class UsersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_user
+    @user = User.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def user_params
-      params.require(:user).permit(:name, :email, :age, :password)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def user_params
+    params.require(:user).permit(:name, :email, :age, :password)
+  end
 
-    # Confirms a logged-in user.
-    def logged_in_user
-      unless logged_in?
-        flash[:danger] = "Please log in."
-        redirect_to login_url
-      end
+  # Confirms a logged-in user.
+  def logged_in_user
+    unless logged_in?
+      flash[:danger] = "Please log in."
+      redirect_to login_url
     end
+  end
 
-    # Confirms the correct user.
-    def correct_user
-      @user = User.find(params[:id])
-      redirect_to(root_url) unless current_user?(@user)
-    end
+  # Confirms the correct user.
+  def correct_user
+    @user = User.find(params[:id])
+    redirect_to(root_url) unless current_user?(@user)
+  end
 
 end
